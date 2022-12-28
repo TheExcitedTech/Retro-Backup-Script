@@ -1,7 +1,7 @@
 #/bin/bash
 clear
 #Script to check to see if there are .sav files. Then backs them up. 
-LOG_FILE='/roms2/backupsavs/backupsavs.log'
+#LOG_FILE='/roms2/backupsavs/backupsavs.log'
 
 if [ ! -d "roms2/backupsavs" ]; then
     sudo mkdir -v /roms2/backupsavs
