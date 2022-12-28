@@ -1,6 +1,6 @@
 #/bin/bash
 clear
-#Script to check to see if there are .sav files. Then backs them up. 
+#Script to check to see if there are Save files. Then backs them up. 
 #LOG_FILE='/roms2/backupsavs/backupsavs.log'
 SAVE_TYPES=(".srm" ".state*" ".sav")
 
