@@ -26,7 +26,7 @@ printf "\n\nFinding $svfile files and copying them to backupsavs..."
 sudo find /roms2 -name "*.$svfile" -exec cp -t /roms2/backupsavs/$svfile {} \;
 done
 
- printf "\n\n\e[32mYour saves gave been backed up"
+ printf "\n\n\e[32mYour saves have been backed up"
 
 sleep 3
 exit 0
