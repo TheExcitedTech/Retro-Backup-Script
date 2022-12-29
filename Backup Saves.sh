@@ -18,13 +18,9 @@ then
   width="60"
 fi
 
-# export TERM=linux
-# export XDG_RUNTIME_DIR=/run/user/$UID/
-
 printf "\033c" > /dev/tty1
-printf "Starting Backup Save Script..." > /dev/tty1
+printf "Starting Save Backup Script..." > /dev/tty1
 
-#
 # Joystick controls
 #
 # only one instance
@@ -33,22 +29,19 @@ sudo $CONTROLS backup.sh rg552 &
 sleep 2
 
 
-dialog --title "Warning" --yesno "This will overwrite any saves in the backupsav. \n Do you want to continue?" 10 40
+dialog --title "Warning" --yesno "This will overwrite any saves in the backupsavs folder. \n Do you want to continue?" $height $width
 if [ $? = 0 ]; then
     BackUpSaves
+    pgrep -f oga_controls | sudo xargs kill -9
 elif [ $? = 1 ]; then
     printf "No action taken. Exiting Script..."
+    sleep 2
     pgrep -f oga_controls | sudo xargs kill -9
     exit 1
-else
-    printf "Unable to recognize choice. Exiting Script..."
-    pgrep -f oga_controls | sudo xargs kill -9
-    exit 2
 fi
 
 SAVE_TYPES=("srm" "state*" "sav" "mcd")
 
-#printf "\e[31mThis will overwrite any saves in the backupsav\n"
 BackUpSaves{
 printf "\e[0mBacking up save files...\n"
 
@@ -74,5 +67,4 @@ done
 sleep 3
 }
 
-pgrep -f oga_controls | sudo xargs kill -9
 exit 0
