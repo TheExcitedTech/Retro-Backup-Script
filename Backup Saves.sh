@@ -27,7 +27,7 @@ CONTROLS="/opt/wifi/oga_controls"
 sudo $CONTROLS backup.sh rg552 &
 sleep 2
 
-dialog --title "Warning" --yesno "This will overwrite any saves in the backupsavs folder. \n Do you want to continue?" $height $width
+dialog --title "Warning" --yesno "This will overwrite any saves in the backupsavs folder. \n Do you want to continue?\nNote:If you don't have a backupsavs folder this will create it." $height $width
 if [ $? = 0 ]; then
     BackUpSaves
     pgrep -f oga_controls | sudo xargs kill -9
