@@ -22,12 +22,10 @@ printf "\033c" > /dev/tty1
 printf "Starting Save Backup Script..." > /dev/tty1
 
 # Joystick controls
-#
 # only one instance
 CONTROLS="/opt/wifi/oga_controls"
 sudo $CONTROLS backup.sh rg552 &
 sleep 2
-
 
 dialog --title "Warning" --yesno "This will overwrite any saves in the backupsavs folder. \n Do you want to continue?" $height $width
 if [ $? = 0 ]; then
@@ -62,8 +60,7 @@ printf "\n\nFinding $svfile files and copying them to backupsavs..."
 sudo find /roms2 -name "*.$svfile" -exec cp -t /roms2/backupsavs/$svfile {} \;
 done
 
- printf "\n\n\e[32mYour saves have been backed up"
-
+printf "\n\n\e[32mYour saves have been backed up"
 sleep 3
 }
 
