@@ -40,7 +40,7 @@ fi
 
 SAVE_TYPES=("srm" "state*" "sav" "mcd")
 
-BackUpSaves{
+BackUpSaves () {
 printf "\e[0mBacking up save files...\n"
 
 if [ ! -d "roms2/backupsavs" ]; then
