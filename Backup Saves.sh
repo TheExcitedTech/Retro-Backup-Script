@@ -27,17 +27,6 @@ CONTROLS="/opt/wifi/oga_controls"
 sudo $CONTROLS backup.sh rg552 &
 sleep 2
 
-dialog --title "Warning" --yesno "This will overwrite any saves in the backupsavs folder. \n Do you want to continue?\nNote:If you don't have a backupsavs folder this will create it." $height $width
-if [ $? = 0 ]; then
-    BackUpSaves
-    pgrep -f oga_controls | sudo xargs kill -9
-elif [ $? = 1 ]; then
-    printf "No action taken. Exiting Script..."
-    sleep 2
-    pgrep -f oga_controls | sudo xargs kill -9
-    exit 1
-fi
-
 SAVE_TYPES=("srm" "state*" "sav" "mcd")
 
 BackUpSaves () {
@@ -63,5 +52,16 @@ done
 printf "\n\n\e[32mYour saves have been backed up"
 sleep 3
 }
+
+dialog --title "Warning" --yesno "This will overwrite any saves in the backupsavs folder. \n Do you want to continue?\nNote:If you don't have a backupsavs folder this will create it." $height $width
+if [ $? = 0 ]; then
+    BackUpSaves
+    pgrep -f oga_controls | sudo xargs kill -9
+elif [ $? = 1 ]; then
+    printf "No action taken. Exiting Script..."
+    sleep 2
+    pgrep -f oga_controls | sudo xargs kill -9
+    exit 1
+fi
 
 exit 0
