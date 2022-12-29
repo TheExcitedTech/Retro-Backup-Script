@@ -1,11 +1,13 @@
-#/bin/bash
+#!/bin/bash
 
 #Script to check to see if there are Save files. Then backs them up. 
 #LOG_FILE='/roms2/backupsavs/backupsavs.log'
-SAVE_TYPES=("srm" "state*" "sav" "mcd")
+clear
+printf "\e[31mThis will overwrite any saves in the backupsav\n"
+sleep 3
+printf "\e[0mBacking up save files...\n"
 
-printf "\033[0;31mThis will overwrite any saves in the backupsav\n"
-printf "\033[0mBacking up save files...\n"
+SAVE_TYPES=("srm" "state*" "sav" "mcd")
 
 if [ ! -d "roms2/backupsavs" ]; then
     sudo mkdir -v /roms2/backupsavs
@@ -27,3 +29,4 @@ done
  printf "\n\n\e[32mYour saves gave been backed up"
 
 sleep 3
+exit 0
