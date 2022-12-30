@@ -28,6 +28,8 @@ sudo $CONTROLS backup.sh rg552 &
 sleep 2
 
 SAVE_TYPES=("srm" "state*" "sav" "mcd")
+BACKUPFOLDER="roms2/backupsavs"
+TEMPFOLDER="roms2/temp_dir"
 
 BackUpSaves () {
 printf "\e[0mBacking up save files...\n"
@@ -46,11 +48,15 @@ for svfile in ${SAVE_TYPES[@]}; do #creates subdirectories for each file type.
         sudo mkdir -v /roms2/backupsavs/$svfile
     fi
 printf "\n\nFinding $svfile files and copying them to backupsavs..."
-sudo find /roms2 -name "*.$svfile" -exec cp -t /roms2/backupsavs/$svfile {} \;
+sudo find /roms2 -not -path */backupsavs/* -name "*.$svfile" -exec cp -f {} /roms2/backupsavs/$svfile \;
 done
 
 printf "\n\n\e[32mYour saves have been backed up"
 sleep 3
+}
+
+CompareSavDirs () {
+    diff -qr $BACKUPFOLDER $TEMPFOLDER 
 }
 
 dialog --title "Warning" --yesno "This will overwrite any saves in the backupsavs folder. \n Do you want to continue?\nNote:If you don't have a backupsavs folder this will create it." $height $width
