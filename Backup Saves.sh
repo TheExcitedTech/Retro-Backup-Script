@@ -26,7 +26,7 @@ printf "Starting Save Backup Script..." > /dev/tty1
 # Joystick controls
 # only one instance
 CONTROLS="/opt/wifi/oga_controls"
-sudo $CONTROLS Backup_Saves.sh rg552 & sleep 2
+sudo $CONTROLS Backup\ Saves.sh rg552 & sleep 2
 
 #########################
 SAVE_TYPES=("srm" "state*" "sav" "mcd")
