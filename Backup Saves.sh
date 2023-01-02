@@ -53,7 +53,6 @@ printf "\n\n\e[32mYour saves have been backed up"
 sleep 2
 }
 
-
 StartBackupFunction () {
 if [ ! -d "/roms2/$1" ]; then
     sudo mkdir -v /roms2/$1
