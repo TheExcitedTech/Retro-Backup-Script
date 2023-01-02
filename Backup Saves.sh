@@ -64,7 +64,7 @@ fi
 }
 
 BackupWarning () {
-dialog --title "Warning" --yesno "This will overwrite any saves in the $1 folder. \n Do you want to continue?\nNote:If you don't have a $1 folder this will create it." $height $width
+dialog --title "Warning" --yesno "This will overwrite any saves in the $1 folder. \n Do you want to continue?\n" $height $width
 if [ $? = 0 ]; then
     BackUpSaves
     pgrep -f oga_controls | sudo xargs kill -9
