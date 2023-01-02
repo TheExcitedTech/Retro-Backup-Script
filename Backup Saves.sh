@@ -30,7 +30,7 @@ sudo $CONTROLS Backup\ Saves.sh rg552 & sleep 2
 
 #########################
 SAVE_TYPES=("srm" "state*" "sav" "mcd")
-BACKUPFOLDER="backupsavs"
+${1:-"backupsavs"} #BACKUP FOLDER
 #########################
 
 BackUpSaves () {
@@ -38,15 +38,15 @@ printf "\e[0mBacking up save files...\n"
 
 for svfile in ${SAVE_TYPES[@]}; do #creates subdirectories for each file type. 
     if [ $svfile == 'state*' ]; then
-        if [ ! -d "/roms2/$BACKUPFOLDER/state" ]; then
-            sudo mkdir -v /roms2/$BACKUPFOLDER/state
+        if [ ! -d "/roms2/$1/state" ]; then
+            sudo mkdir -v /roms2/$1/state
         fi
-        sudo find /roms2 -not -path */$BACKUPFOLDER/* -name "*.$svfile" -exec cp {} /roms2/$BACKUPFOLDER/state \;
-    elif [ ! -d "/roms2/$BACKUPFOLDER/$svfile" ]; then
-        sudo mkdir -v /roms2/$BACKUPFOLDER/$svfile
+        sudo find /roms2 -not -path */$1/* -name "*.$svfile" -exec cp {} /roms2/$1/state \;
+    elif [ ! -d "/roms2/$1/$svfile" ]; then
+        sudo mkdir -v /roms2/$1/$svfile
     fi
-printf "\n\nFinding $svfile files and copying them to $BACKUPFOLDER..."
-sudo find /roms2 -not -path */$BACKUPFOLDER/* -name "*.$svfile" -exec cp {} /roms2/$BACKUPFOLDER/$svfile \;
+printf "\n\nFinding $svfile files and copying them to $1..."
+sudo find /roms2 -not -path */$1/* -name "*.$svfile" -exec cp {} /roms2/$1/$svfile \;
 done
 
 printf "\n\n\e[32mYour saves have been backed up"
@@ -55,8 +55,8 @@ sleep 2
 
 
 StartBackupFunction () {
-if [ ! -d "/roms2/$BACKUPFOLDER" ]; then
-    sudo mkdir -v /roms2/$BACKUPFOLDER
+if [ ! -d "/roms2/$1" ]; then
+    sudo mkdir -v /roms2/$1
     BackUpSaves
     pgrep -f oga_controls | sudo xargs kill -9
 else
@@ -65,7 +65,7 @@ fi
 }
 
 BackupWarning () {
-dialog --title "Warning" --yesno "This will overwrite any saves in the $BACKUPFOLDER folder. \n Do you want to continue?\nNote:If you don't have a $BACKUPFOLDER folder this will create it." $height $width
+dialog --title "Warning" --yesno "This will overwrite any saves in the $1 folder. \n Do you want to continue?\nNote:If you don't have a $1 folder this will create it." $height $width
 if [ $? = 0 ]; then
     BackUpSaves
     pgrep -f oga_controls | sudo xargs kill -9
