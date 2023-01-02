@@ -50,7 +50,7 @@ sudo find /roms2 -not -path */$BACKUPFOLDER/* -name "*.$svfile" -exec cp {} /rom
 done
 
 printf "\n\n\e[32mYour saves have been backed up"
-sleep 3
+sleep 2
 }
 
 
