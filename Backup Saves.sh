@@ -30,23 +30,23 @@ sudo $CONTROLS Backup\ Saves.sh rg552 & sleep 2
 
 #########################
 SAVE_TYPES=("srm" "state*" "sav" "mcd")
-${1:-"backupsavs"} #BACKUP FOLDER
+BACKUP_DIR=${1:-"backupsavs"} #BACKUP FOLDER
 #########################
 
 BackUpSaves () {
 printf "\e[0mBacking up save files...\n"
 
 for svfile in ${SAVE_TYPES[@]}; do #creates subdirectories for each file type. 
-    if [ $svfile == 'state*' ]; then
-        if [ ! -d "/roms2/$1/state" ]; then
-            sudo mkdir -v /roms2/$1/state
+    if [ "$svfile" == 'state*' ]; then
+        if [ ! -d "/roms2/$BACKUP_DIR/state" ]; then
+            sudo mkdir -v /roms2/$BACKUP_DIR/state
         fi
-        sudo find /roms2 -not -path */$1/* -name "*.$svfile" -exec cp {} /roms2/$1/state \;
-    elif [ ! -d "/roms2/$1/$svfile" ]; then
-        sudo mkdir -v /roms2/$1/$svfile
+        sudo find /roms2 -not -path */$BACKUP_DIR/* -name "*.$svfile" -exec cp {} /roms2/$BACKUP_DIR/state \;
+    elif [ ! -d "/roms2/$BACKUP_DIR/$svfile" ]; then
+        sudo mkdir -v /roms2/"$BACKUP_DIR"/"$svfile"
     fi
-printf "\n\nFinding $svfile files and copying them to $1..."
-sudo find /roms2 -not -path */$1/* -name "*.$svfile" -exec cp {} /roms2/$1/$svfile \;
+printf "\n\nFinding $svfile files and copying them to $BACKUP_DIR..."
+sudo find /roms2 -not -path */$BACKUP_DIR/* -name "*.$svfile" -exec cp {} /roms2/$BACKUP_DIR/"$svfile" \;
 done
 
 printf "\n\n\e[32mYour saves have been backed up"
@@ -54,8 +54,8 @@ sleep 2
 }
 
 StartBackupFunction () {
-if [ ! -d "/roms2/$1" ]; then
-    sudo mkdir -v /roms2/$1
+if [ ! -d "/roms2/$BACKUP_DIR" ]; then
+    sudo mkdir -v /roms2/"$BACKUP_DIR"
     BackUpSaves
     pgrep -f oga_controls | sudo xargs kill -9
 else
@@ -64,7 +64,7 @@ fi
 }
 
 BackupWarning () {
-dialog --title "Warning" --yesno "This will overwrite any saves in the $1 folder. \n Do you want to continue?\n" $height $width
+dialog --title "Warning" --yesno "This will overwrite any saves in the $BACKUP_DIR folder. \n Do you want to continue?\n" $height $width
 if [ $? = 0 ]; then
     BackUpSaves
     pgrep -f oga_controls | sudo xargs kill -9
