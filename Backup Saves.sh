@@ -42,14 +42,14 @@ for svfile in ${SAVE_TYPES[@]}; do #creates subdirectories for each file type.
             printf "\n"
             sudo mkdir -v /roms2/$BACKUP_DIR/state
         fi
-        printf "\n\nFinding $svfile files and copying them to $BACKUP_DIR..."
+        printf "\nFinding $svfile files and copying them to $BACKUP_DIR/state..."
         sudo find /roms2 -not -path */$BACKUP_DIR/* -name "*.$svfile" -exec cp {} /roms2/$BACKUP_DIR/state \;
         continue
     elif [ ! -d "/roms2/$BACKUP_DIR/$svfile" ]; then
         printf "\n"
         sudo mkdir -v /roms2/"$BACKUP_DIR"/"$svfile"
     fi
-printf "\n\nFinding $svfile files and copying them to $BACKUP_DIR..."
+printf "\nFinding $svfile files and copying them to $BACKUP_DIR/$svfile..."
 sudo find /roms2 -not -path */$BACKUP_DIR/* -name "*.$svfile" -exec cp {} /roms2/$BACKUP_DIR/"$svfile" \;
 done
 
@@ -79,6 +79,7 @@ elif [ $? = 1 ]; then
     printf "No action taken. Exiting Script..."
     sleep 2
     KillControls
+    printf "\033c" > /dev/tty1
     exit 1
 fi
 }
