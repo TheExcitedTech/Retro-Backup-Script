@@ -41,7 +41,9 @@ for svfile in ${SAVE_TYPES[@]}; do #creates subdirectories for each file type.
         if [ ! -d "/roms2/$BACKUP_DIR/state" ]; then
             sudo mkdir -v /roms2/$BACKUP_DIR/state
         fi
+        printf "\n\nFinding $svfile files and copying them to $BACKUP_DIR..."
         sudo find /roms2 -not -path */$BACKUP_DIR/* -name "*.$svfile" -exec cp {} /roms2/$BACKUP_DIR/state \;
+        continue
     elif [ ! -d "/roms2/$BACKUP_DIR/$svfile" ]; then
         sudo mkdir -v /roms2/"$BACKUP_DIR"/"$svfile"
     fi
