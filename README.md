@@ -5,7 +5,7 @@ Designed around the 353V Device with ArkOS. The filepaths are hardcoded to look 
 
 Default parent folder is 'backupsavs'
 
-Argument can be passed that will change the parent folder to whatever you put in the argument for that instance of the script being read. 
+Argument can be passed that will change the parent folder to whatever you put in the argument for that instance of the script being run. 
 
 You can also change the default directory by editing the `BACKUP_DIR` variable.
 

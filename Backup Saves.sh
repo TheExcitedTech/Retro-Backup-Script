@@ -77,6 +77,6 @@ fi
 }
 
 StartBackupFunction
-clear
+printf "\033c" > /dev/tty1
 
 exit 0
