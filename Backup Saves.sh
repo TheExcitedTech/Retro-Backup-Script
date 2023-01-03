@@ -39,12 +39,14 @@ printf "\e[0mBacking up save files...\n"
 for svfile in ${SAVE_TYPES[@]}; do #creates subdirectories for each file type. 
     if [ "$svfile" == 'state*' ]; then
         if [ ! -d "/roms2/$BACKUP_DIR/state" ]; then
+            printf "\n"
             sudo mkdir -v /roms2/$BACKUP_DIR/state
         fi
         printf "\n\nFinding $svfile files and copying them to $BACKUP_DIR..."
         sudo find /roms2 -not -path */$BACKUP_DIR/* -name "*.$svfile" -exec cp {} /roms2/$BACKUP_DIR/state \;
         continue
     elif [ ! -d "/roms2/$BACKUP_DIR/$svfile" ]; then
+        printf "\n"
         sudo mkdir -v /roms2/"$BACKUP_DIR"/"$svfile"
     fi
 printf "\n\nFinding $svfile files and copying them to $BACKUP_DIR..."
@@ -55,11 +57,15 @@ printf "\n\n\e[32mYour saves have been backed up"
 sleep 2
 }
 
+KillControls () { #Needs to be run before the script exits. Without this it will cause the device's controls to be wonky until next restart. 
+pgrep -f oga_controls | sudo xargs kill -9
+}
+
 StartBackupFunction () {
 if [ ! -d "/roms2/$BACKUP_DIR" ]; then
+    printf "\n"
     sudo mkdir -v /roms2/"$BACKUP_DIR"
     BackUpSaves
-    pgrep -f oga_controls | sudo xargs kill -9
 else
     BackupWarning
 fi
@@ -69,16 +75,16 @@ BackupWarning () {
 dialog --title "Warning" --yesno "This will overwrite any saves in the $BACKUP_DIR folder. \n Do you want to continue?\n" $height $width
 if [ $? = 0 ]; then
     BackUpSaves
-    pgrep -f oga_controls | sudo xargs kill -9
 elif [ $? = 1 ]; then
     printf "No action taken. Exiting Script..."
     sleep 2
-    pgrep -f oga_controls | sudo xargs kill -9
+    KillControls
     exit 1
 fi
 }
 
 StartBackupFunction
+KillControls
 printf "\033c" > /dev/tty1
 
 exit 0
