@@ -4,20 +4,17 @@
 #Created by TheExcitedTech
 
 sudo chmod 666 /dev/tty1
-printf "\033c" > /dev/tty1
-
 printf "\e[?25l" > /dev/tty1 #hide cursor
 dialog --clear
 
-height="15"
+height="15" 
 width="55"
 
 printf "\033c" > /dev/tty1
 printf "Starting Save Backup Script..." > /dev/tty1
 
-# Joystick controls
 CONTROLS="/opt/wifi/oga_controls"
-sudo $CONTROLS Backup\ Saves.sh rg552 & sleep 2
+sudo $CONTROLS Backup\ Saves.sh rg552 & sleep 2 #Joystick controls
 
 #########################
 SAVE_TYPES=("srm" "state*" "sav" "mcd")
@@ -33,14 +30,14 @@ for svfile in ${SAVE_TYPES[@]}; do #creates subdirectories for each file type.
             printf "\n"
             sudo mkdir -v /roms2/$BACKUP_DIR/state
         fi
-        printf "\nFinding $svfile files and copying them to $BACKUP_DIR/state..."
+        printf "Finding $svfile files and copying them to $BACKUP_DIR/state...\n"
         sudo find /roms2 -not -path */$BACKUP_DIR/* -name "*.$svfile" -exec cp {} /roms2/$BACKUP_DIR/state \;
         continue
     elif [ ! -d "/roms2/$BACKUP_DIR/$svfile" ]; then
         printf "\n"
         sudo mkdir -v /roms2/"$BACKUP_DIR"/"$svfile"
     fi
-printf "\nFinding $svfile files and copying them to $BACKUP_DIR/$svfile..."
+printf "Finding $svfile files and copying them to $BACKUP_DIR/$svfile...\n"
 sudo find /roms2 -not -path */$BACKUP_DIR/* -name "*.$svfile" -exec cp {} /roms2/$BACKUP_DIR/"$svfile" \;
 done
 
@@ -77,5 +74,4 @@ fi
 
 StartBackupFunction
 KillControls
-
 exit 0
