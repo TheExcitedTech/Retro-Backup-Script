@@ -20,6 +20,7 @@ sudo $CONTROLS Backup\ Saves.sh rg552 & sleep 2 #Joystick controls
 SAVE_TYPES=("srm" "state*" "sav" "mcd" "eep" "mpk" "st0")
 BACKUP_DIR=${1:-"backupsavs"} #BACKUP FOLDER
 ROM_DIRS=()
+TMP_FILE="/tmp/romdirectories.txt"
 #########################
 
 FindGameDir () {
@@ -29,7 +30,20 @@ FindGameDir () {
 ####This will make it easier to organize the save data by system
 #### Write the function in a way that checks for the directories in roms2. So if there is custom systems/collections this will also backup their saves. Keep this versatile and scalable. 
 
-    ls -1 /roms2 > #to temp file /tmp/
+ls -d1 /roms2 > "$TMP_FILE" #Only shows parent rom directories.
+while read -r line; do
+    ROM_DIRS+=("$line\n")
+done < $TMP_FILE 
+
+for log in ${ROM_DIRS[@]}; do
+        if [ "$(ls -A "/roms2/$log")"  ]; then
+            mkdir "/roms2/$BACKUP_DIR/$log"
+            
+        else
+        continue
+        fi
+
+done
     #while read temp file line by line - add each to an array(ROM_DIRS)
     #Loop through directories and check if there is content in there
     #If there is content, check if there is any SAVE_TYPES and create folder in BACKUPDIR with ROM_DIRS name and copy SAVE_TYPES in there
