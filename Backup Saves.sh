@@ -37,7 +37,7 @@ while read -r line; do
 done < $TMP_FILE 
 
 for log in ${ROM_DIRS[@]}; do
-    if [ -z "$(ls -A "/roms2/$log" 2>/dev/null)"  ]; then #Checks if there are any files in the directories.
+    if [ -n "$(ls -A "/roms2/$log" 2>/dev/null)"  ]; then #Checks if there are any files in the directories.
         continue
     fi
     if [ $log == "$BACKUP_DIR"]; then
@@ -96,7 +96,10 @@ elif [ $? = 1 ]; then
     exit 1
 fi
 }
-
+main () {
 StartBackupFunction
 KillControls
+}
+
+main
 exit 0
