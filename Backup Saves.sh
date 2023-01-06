@@ -40,6 +40,9 @@ for log in ${ROM_DIRS[@]}; do
     if [ -z "$(ls -A "/roms2/$log" 2>/dev/null)"  ]; then #Checks if there are any files in the directories.
         continue
     fi
+    if [ $log == "$BACKUP_DIR"]; then
+        continue
+    fi
     if [ ! -d "/roms2/$BACKUP_DIR/$log" ]; then
         sudo mkdir -v /roms2/"$BACKUP_DIR"/"$log"; printf "\n"
     fi
