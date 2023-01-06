@@ -31,13 +31,13 @@ FindGameDir () {
 ####This will make it easier to organize the save data by system
 #### Write the function in a way that checks for the directories in roms2. So if there is custom systems/collections this will also backup their saves. Keep this versatile and scalable. 
 printf "Finding ROM directories and creating system backup folders...\n"
-ls -d1 /roms2 > "$TMP_FILE" #Only shows parent rom directories.
+ls -d1 /roms2/*/ > "$TMP_FILE" #Only shows parent rom directories.
 while read -r line; do
     ROM_DIRS+=("$line\n")
 done < $TMP_FILE 
 
 for log in ${ROM_DIRS[@]}; do
-    if [ -n "$(ls -A "/roms2/$log" 2>/dev/null)"  ]; then #Checks if there are any files in the directories.
+    if [ -z "/roms2/$log"  ]; then #Checks if there are any files in the directories.
         continue
     fi
     if [ $log == "$BACKUP_DIR"]; then
