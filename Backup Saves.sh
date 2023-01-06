@@ -20,6 +20,7 @@ sudo $CONTROLS Backup\ Saves.sh rg552 & sleep 2 #Joystick controls
 SAVE_TYPES=("srm" "state*" "sav" "mcd" "eep" "mpk" "st0")
 BACKUP_DIR=${1:-"backupsavs"} #BACKUP FOLDER
 ROM_DIRS=()
+CHECKED_ROM_DIRS=()
 TMP_FILE="/tmp/romdirectories.txt"
 #########################
 
@@ -29,20 +30,20 @@ FindGameDir () {
 ####If there is content in ROM_DIRS, create directory in $BACKUP_DIR and look for $SAVE_TYPES in the directory to backup 
 ####This will make it easier to organize the save data by system
 #### Write the function in a way that checks for the directories in roms2. So if there is custom systems/collections this will also backup their saves. Keep this versatile and scalable. 
-
+printf "Finding ROM directories and creating system backup folders...\n"
 ls -d1 /roms2 > "$TMP_FILE" #Only shows parent rom directories.
 while read -r line; do
     ROM_DIRS+=("$line\n")
 done < $TMP_FILE 
 
 for log in ${ROM_DIRS[@]}; do
-        if [ "$(ls -A "/roms2/$log")"  ]; then
-            mkdir "/roms2/$BACKUP_DIR/$log"
-            
-        else
+    if [ -z "$(ls -A "/roms2/$log" 2>/dev/null)"  ]; then #Checks if there are any files in the directories.
         continue
-        fi
-
+    fi
+    if [ ! -d "/roms2/$BACKUP_DIR/$log" ]; then
+        sudo mkdir -v /roms2/"$BACKUP_DIR"/"$log"; printf "\n"
+    fi
+    CHECKED_ROM_DIRS+=("$log\n")
 done
     #while read temp file line by line - add each to an array(ROM_DIRS)
     #Loop through directories and check if there is content in there
@@ -50,24 +51,14 @@ done
     #rm temporary file  
 
 }
+
 BackUpSaves () {
 printf "\e[0mBacking up save files...\n"
-
-for svfile in ${SAVE_TYPES[@]}; do #creates subdirectories for each file type. 
-    if [ "$svfile" == 'state*' ]; then
-        if [ ! -d "/roms2/$BACKUP_DIR/state" ]; then
-            printf "\n"
-            sudo mkdir -v /roms2/$BACKUP_DIR/state
-        fi
-        printf "Finding $svfile files and copying them to $BACKUP_DIR/state...\n"
-        sudo find /roms2 -not -path */$BACKUP_DIR/* -name "*.$svfile" -exec cp {} /roms2/$BACKUP_DIR/state \;
-        continue
-    elif [ ! -d "/roms2/$BACKUP_DIR/$svfile" ]; then
-        printf "\n"
-        sudo mkdir -v /roms2/"$BACKUP_DIR"/"$svfile"
-    fi
-printf "Finding $svfile files and copying them to $BACKUP_DIR/$svfile...\n"
-sudo find /roms2 -not -path */$BACKUP_DIR/* -name "*.$svfile" -exec cp {} /roms2/$BACKUP_DIR/"$svfile" \;
+for dir in ${CHECKED_ROM_DIRS[@]}; do
+    for svfile in ${SAVE_TYPES[@]}; do 
+        printf "Finding $svfile files and copying them to $BACKUP_DIR/$dir/...\n"
+        sudo find /roms2/"$dir" -not -path */$BACKUP_DIR/* -name "*.$svfile" -exec cp {} /roms2/"$BACKUP_DIR"/"$dir" \;
+    done
 done
 
 printf "\n\n\e[32mYour saves have been backed up"
@@ -83,6 +74,7 @@ StartBackupFunction () {
 if [ ! -d "/roms2/$BACKUP_DIR" ]; then
     printf "\n"
     sudo mkdir -v /roms2/"$BACKUP_DIR"
+    FindGameDir
     BackUpSaves
 else
     BackupWarning
@@ -92,6 +84,7 @@ fi
 BackupWarning () {
 dialog --title "Warning" --yesno "This will overwrite any saves in the $BACKUP_DIR folder. \n Do you want to continue?\n" $height $width
 if [ $? = 0 ]; then
+    FindGameDir
     BackUpSaves
 elif [ $? = 1 ]; then
     printf "No action taken. Exiting Script..."
