@@ -20,6 +20,7 @@ SAVE_TYPES=("srm" "state*" "sav" "mcd" "eep" "mpk" "st0")
 BACKUP_DIR=${1:-"backupsavs"} #BACKUP FOLDER
 ROM_DIRS=()
 CHECKED_ROM_DIRS=()
+SKIPPED_DIRS=("$BACKUP_DIR" "backup" "opt" "themes" "etc" "bezels" "BGM" "bgmusic" "launchimages" "screenshots" "tools" "videos") #Directories that will be skipped regardless if they have files in it. 
 TMP_FILE="/tmp/romdirectories.txt"
 ROMS2="/roms2/"
 #########################
@@ -34,10 +35,12 @@ while read -r line; do
 done < $TMP_FILE 
 
 for log in ${ROM_DIRS[@]}; do
-    if [ -z "$(ls -A $ROMS2/$log)" ]; then #Skips directory if it's empty.
+    for skipped in ${SKIPPED_DIRS[@]}; do
+        if [ $log == "$skipped/" ]; then
         continue
-    fi
-    if [ $log == "$BACKUP_DIR/" ]; then
+        fi
+    done
+    if [ -z "$(ls -A $ROMS2/$log)" ]; then #Skips directory if it's empty.
         continue
     fi
     if [ ! -d "/roms2/$BACKUP_DIR/$log" ]; then
@@ -45,6 +48,7 @@ for log in ${ROM_DIRS[@]}; do
     fi
     CHECKED_ROM_DIRS+=("$log") #This array only stores the names of the directories that aren't empty. 
 done
+unset ROM_DIRS
 }
 
 BackUpSaves () {
