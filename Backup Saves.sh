@@ -20,14 +20,15 @@ SAVE_TYPES=("srm" "state*" "sav" "mcd" "eep" "mpk" "st0")
 BACKUP_DIR=${1:-"backupsavs"} #BACKUP FOLDER
 ROM_DIRS=()
 CHECKED_ROM_DIRS=()
-SKIPPED_DIRS=("$BACKUP_DIR" "backup" "opt" "themes" "etc" "bezels" "bios" "BGM" "bgmusic" "launchimages" "screenshots" "tools" "videos") #Directories that will be skipped regardless if they have files in it. 
+#Directories that will be skipped regardless if they have files in it.
+SKIPPED_DIRS=("$BACKUP_DIR" "backup" "opt" "themes" "etc" "bezels" "bios" "BGM" "bgmusic" "launchimages" "screenshots" "tools" "videos")  
 TMP_FILE="/tmp/romdirectories.txt"
 ROMS2="/roms2/"
 #########################
 
 FindGameDir () {
  
-printf "Finding ROM directories and creating system backup folders...\n"
+printf "Finding ROM directories...\n"
 ls -d1 /roms2/*/ > "$TMP_FILE" #Only shows parent rom directories.
 while read -r line; do
     line=$(cut -c 8- <<< "$line") #Removes the '/roms2/' from the array items.
@@ -35,20 +36,30 @@ while read -r line; do
 done < $TMP_FILE 
 
 for log in ${ROM_DIRS[@]}; do
-    for skipped in ${SKIPPED_DIRS[@]}; do
-        if [ $log == "$skipped/" ]; then
-        continue
-        fi
-    done
     if [ -z "$(ls -A $ROMS2/$log)" ]; then #Skips directory if it's empty.
         continue
     fi
-    if [ ! -d "/roms2/$BACKUP_DIR/$log" ]; then
-        sudo mkdir -v /roms2/"$BACKUP_DIR"/"$log"; printf "\n"
-    fi
     CHECKED_ROM_DIRS+=("$log") #This array only stores the names of the directories that aren't empty. 
 done
+}
+
+PruneGameDir () { #This function removes any folders that are meant to be skipped.
+for skipped in ${SKIPPED_DIRS[@]}; do
+    for fol in ${CHECKED_ROM_DIRS[@]}; do
+        if [ "$fol" == "$skipped/" ]; then
+        CHECKED_ROM_DIRS=( "${CHECKED_ROM_DIRS[@]/$fol}" )
+        fi
+    done
+done
 unset ROM_DIRS
+}
+
+CreateBackupDirs () {
+for fol in ${CHECKED_ROM_DIRS[@]}; do
+    if [ ! -d "/roms2/$BACKUP_DIR/$fol" ]; then
+        sudo mkdir -v /roms2/"$BACKUP_DIR"/"$fol"; printf "\n"
+    fi
+done    
 }
 
 BackUpSaves () {
@@ -77,6 +88,8 @@ if [ ! -d "/roms2/$BACKUP_DIR" ]; then
     printf "\n"
     sudo mkdir -v /roms2/"$BACKUP_DIR"
     FindGameDir
+    PruneGameDir
+    CreateBackupDirs
     BackUpSaves
 else
     BackupWarning
@@ -87,6 +100,8 @@ BackupWarning () {
 dialog --title "Warning" --yesno "This will overwrite any saves in the $BACKUP_DIR folder. \n Do you want to continue?\n" $height $width
 if [ $? = 0 ]; then
     FindGameDir
+    PruneGameDir
+    CreateBackupDirs
     BackUpSaves
 elif [ $? = 1 ]; then
     printf "No action taken. Exiting Script..."
