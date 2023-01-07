@@ -22,6 +22,7 @@ BACKUP_DIR=${1:-"backupsavs"} #BACKUP FOLDER
 ROM_DIRS=()
 CHECKED_ROM_DIRS=()
 TMP_FILE="/tmp/romdirectories.txt"
+ROMS2="/roms2/"
 #########################
 
 FindGameDir () {
@@ -33,7 +34,8 @@ FindGameDir () {
 printf "Finding ROM directories and creating system backup folders...\n"
 ls -d1 /roms2/*/ > "$TMP_FILE" #Only shows parent rom directories.
 while read -r line; do
-    ROM_DIRS+=("$line\n")
+    line=$(cut -c 8- <<< "$line") #Removes the '/roms2/' from the array. 
+    ROM_DIRS+=("$line")
 done < $TMP_FILE 
 
 for log in ${ROM_DIRS[@]}; do
@@ -46,7 +48,7 @@ for log in ${ROM_DIRS[@]}; do
     if [ ! -d "/roms2/$BACKUP_DIR/$log" ]; then
         sudo mkdir -v /roms2/"$BACKUP_DIR"/"$log"; printf "\n"
     fi
-    CHECKED_ROM_DIRS+=("$log\n")
+    CHECKED_ROM_DIRS+=("$log")
 done
     #while read temp file line by line - add each to an array(ROM_DIRS)
     #Loop through directories and check if there is content in there
@@ -102,4 +104,5 @@ KillControls
 }
 
 main
+
 exit 0
