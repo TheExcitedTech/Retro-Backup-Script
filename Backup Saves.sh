@@ -39,10 +39,10 @@ while read -r line; do
 done < $TMP_FILE 
 
 for log in ${ROM_DIRS[@]}; do
-    if [ -z "/roms2/$log"  ]; then #Checks if there are any files in the directories.
+    if [ -z "$(ls -A $ROMS2/$log)" ]; then #Skips diretory if there are no files in it.
         continue
     fi
-    if [ $log == "$BACKUP_DIR/"]; then
+    if [ $log == "$BACKUP_DIR/" ]; then
         continue
     fi
     if [ ! -d "/roms2/$BACKUP_DIR/$log" ]; then
@@ -60,9 +60,12 @@ done
 BackUpSaves () {
 printf "\e[0mBacking up save files...\n"
 for dir in ${CHECKED_ROM_DIRS[@]}; do
+    if [ $dir == "dreamcast/" ]; then
+        sudo find /roms2/"$dir" -name "*.bin" -exec cp {} /roms2/"$BACKUP_DIR"/"$dir" \;
+    fi
     for svfile in ${SAVE_TYPES[@]}; do 
         printf "Finding $svfile files and copying them to $BACKUP_DIR/$dir...\n"
-        sudo find /roms2/"$dir" -not -path */$BACKUP_DIR/* -name "*.$svfile" -exec cp {} /roms2/"$BACKUP_DIR"/"$dir" \;
+        sudo find /roms2/"$dir" -name "*.$svfile" -exec cp {} /roms2/"$BACKUP_DIR"/"$dir" \;
     done
 done
 
