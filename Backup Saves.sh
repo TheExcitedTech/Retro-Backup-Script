@@ -26,7 +26,7 @@ TMP_FILE="/tmp/romdirectories.txt"
 ROMS2="/roms2/"
 #########################
 
-FindGameDir () {
+FindGameDirs () {
  
 printf "Finding ROM directories...\n"
 ls -d1 /roms2/*/ > "$TMP_FILE" #Only shows parent rom directories.
@@ -43,7 +43,7 @@ for log in ${ROM_DIRS[@]}; do
 done
 }
 
-PruneGameDir () { #This function removes any folders that are meant to be skipped.
+PruneGameDirs () { #This function removes any folders that are meant to be skipped.
 for skipped in ${SKIPPED_DIRS[@]}; do
     for fol in ${CHECKED_ROM_DIRS[@]}; do
         if [ "$fol" == "$skipped/" ]; then
@@ -87,8 +87,8 @@ StartBackupFunction () {
 if [ ! -d "/roms2/$BACKUP_DIR" ]; then
     printf "\n"
     sudo mkdir -v /roms2/"$BACKUP_DIR"
-    FindGameDir
-    PruneGameDir
+    FindGameDirs
+    PruneGameDirs
     CreateBackupDirs
     BackUpSaves
 else
@@ -99,8 +99,8 @@ fi
 BackupWarning () {
 dialog --title "Warning" --yesno "This will overwrite any saves in the $BACKUP_DIR folder. \n Do you want to continue?\n" $height $width
 if [ $? = 0 ]; then
-    FindGameDir
-    PruneGameDir
+    FindGameDirs
+    PruneGameDirs
     CreateBackupDirs
     BackUpSaves
 elif [ $? = 1 ]; then
