@@ -15,3 +15,5 @@ You can also change the default directory by editing the `BACKUP_DIR` variable.
 Dev Branch is to mess with the script to add experimental features. Will merge into main branch when changes have been tested and functionally verified. We should never code directly in PROD
 
 *Dev Branch can/will probably break the script. Be careful with using the script in the dev branch.*
+
+Dev Branch has support for organizing the backups by system folder in the $BACKUP_DIR. 
