@@ -20,7 +20,7 @@ SAVE_TYPES=("srm" "state*" "sav" "mcd" "eep" "mpk" "st0")
 BACKUP_DIR=${1:-"backupsavs"} #BACKUP FOLDER
 ROM_DIRS=()
 CHECKED_ROM_DIRS=()
-SKIPPED_DIRS=("$BACKUP_DIR" "backup" "opt" "themes" "etc" "bezels" "BGM" "bgmusic" "launchimages" "screenshots" "tools" "videos") #Directories that will be skipped regardless if they have files in it. 
+SKIPPED_DIRS=("$BACKUP_DIR" "backup" "opt" "themes" "etc" "bezels" "bios" "BGM" "bgmusic" "launchimages" "screenshots" "tools" "videos") #Directories that will be skipped regardless if they have files in it. 
 TMP_FILE="/tmp/romdirectories.txt"
 ROMS2="/roms2/"
 #########################
