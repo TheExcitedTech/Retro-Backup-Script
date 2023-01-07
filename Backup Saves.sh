@@ -23,7 +23,7 @@ CHECKED_ROM_DIRS=()
 #Directories that will be skipped regardless if they have files in it.
 SKIPPED_DIRS=("$BACKUP_DIR" "backup" "opt" "themes" "etc" "bezels" "bios" "BGM" "bgmusic" "launchimages" "screenshots" "tools" "videos")  
 TMP_FILE="/tmp/romdirectories.txt"
-ROMS2="/roms2/"
+ROMS2="/roms2"
 #########################
 
 FindGameDirs () {
@@ -69,7 +69,7 @@ for dir in ${CHECKED_ROM_DIRS[@]}; do
         sudo find /roms2/"$dir" -name "*.bin" -exec cp {} /roms2/"$BACKUP_DIR"/"$dir" \;
     fi
     for svfile in ${SAVE_TYPES[@]}; do 
-        printf "Finding $svfile files and copying them to $BACKUP_DIR/$dir...\n"
+        printf "Finding $svfile files in $dir and copying them to $BACKUP_DIR/$dir...\n"
         sudo find /roms2/"$dir" -name "*.$svfile" -exec cp {} /roms2/"$BACKUP_DIR"/"$dir" \;
     done
 done
