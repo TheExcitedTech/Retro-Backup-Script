@@ -11,6 +11,8 @@ You can also change the default directory by editing the `BACKUP_DIR` variable.
 
 The script will check to see if there is content in the parent ROMs directory. If there is at least 1 file, it will create a folder in the $BACKUP_DIR with the folder title and scan the directory to see if there are any save files to backup.  
 
+There is an array for folders that will be automatically skipped regardless if there is content in it or not. These are meant to include system folders.
+
 **Please make sure to offload the backupsavs folder to another place, such as a cloud storage location.**
 -------
 
