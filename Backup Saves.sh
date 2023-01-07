@@ -1,5 +1,4 @@
 #!/bin/bash
-
 #Script to check to see if there are save files. Then backs them up. 
 #Created by TheExcitedTech
 
@@ -26,20 +25,16 @@ ROMS2="/roms2/"
 #########################
 
 FindGameDir () {
-
-####Iterate through ROM_DIRS
-####If there is content in ROM_DIRS, create directory in $BACKUP_DIR and look for $SAVE_TYPES in the directory to backup 
-####This will make it easier to organize the save data by system
-#### Write the function in a way that checks for the directories in roms2. So if there is custom systems/collections this will also backup their saves. Keep this versatile and scalable. 
+ 
 printf "Finding ROM directories and creating system backup folders...\n"
 ls -d1 /roms2/*/ > "$TMP_FILE" #Only shows parent rom directories.
 while read -r line; do
-    line=$(cut -c 8- <<< "$line") #Removes the '/roms2/' from the array. 
+    line=$(cut -c 8- <<< "$line") #Removes the '/roms2/' from the array items.
     ROM_DIRS+=("$line")
 done < $TMP_FILE 
 
 for log in ${ROM_DIRS[@]}; do
-    if [ -z "$(ls -A $ROMS2/$log)" ]; then #Skips diretory if there are no files in it.
+    if [ -z "$(ls -A $ROMS2/$log)" ]; then #Skips directory if it's empty.
         continue
     fi
     if [ $log == "$BACKUP_DIR/" ]; then
@@ -48,13 +43,8 @@ for log in ${ROM_DIRS[@]}; do
     if [ ! -d "/roms2/$BACKUP_DIR/$log" ]; then
         sudo mkdir -v /roms2/"$BACKUP_DIR"/"$log"; printf "\n"
     fi
-    CHECKED_ROM_DIRS+=("$log")
+    CHECKED_ROM_DIRS+=("$log") #This array only stores the names of the directories that aren't empty. 
 done
-    #while read temp file line by line - add each to an array(ROM_DIRS)
-    #Loop through directories and check if there is content in there
-    #If there is content, check if there is any SAVE_TYPES and create folder in BACKUPDIR with ROM_DIRS name and copy SAVE_TYPES in there
-    #rm temporary file  
-
 }
 
 BackUpSaves () {
@@ -101,6 +91,7 @@ elif [ $? = 1 ]; then
     exit 1
 fi
 }
+
 main () {
 StartBackupFunction
 KillControls
