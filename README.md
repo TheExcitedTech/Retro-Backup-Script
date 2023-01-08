@@ -1,7 +1,7 @@
 # Retro Saves Backup Script
 ## Bash script that will find save and state files and copy them up to a backups directory.
 
-Designed around the 353V Device with ArkOS however this should with other linux based handhelds.
+Designed around the 353V Device with ArkOS however this will work with other linux based handhelds.
 
 The script will check to see if there is content in the parent ROMs directory. If there is at least 1 file, it will create a folder in the `$BACKUP_DIR` with the folder title and scan the directory to see if there are any save files to backup.  
 
