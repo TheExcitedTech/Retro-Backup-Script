@@ -27,7 +27,6 @@ ROOT_DIR=${2:-"/roms2"} #ROOT Directory
 #########################
 
 FindGameDirs () {
- 
 printf "Finding ROM directories...\n"
 ls -d1 $ROOT_DIR/*/ > "$TMP_FILE" #Only shows parent rom directories.
 while read -r line; do
