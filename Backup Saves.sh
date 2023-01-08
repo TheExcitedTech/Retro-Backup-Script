@@ -23,20 +23,20 @@ CHECKED_ROM_DIRS=()
 #Directories that will be skipped regardless if they have files in it.
 SKIPPED_DIRS=("$BACKUP_DIR" "backup" "opt" "themes" "etc" "bezels" "bios" "BGM" "bgmusic" "launchimages" "screenshots" "tools" "videos")  
 TMP_FILE="/tmp/romdirectories.txt"
-ROMS2="/roms2"
+ROOT_DIR=${2:-"/roms2"} #ROOT Directory
 #########################
 
 FindGameDirs () {
  
 printf "Finding ROM directories...\n"
-ls -d1 /roms2/*/ > "$TMP_FILE" #Only shows parent rom directories.
+ls -d1 $ROOT_DIR/*/ > "$TMP_FILE" #Only shows parent rom directories.
 while read -r line; do
     line=$(cut -c 8- <<< "$line") #Removes the '/roms2/' from the array items.
     ROM_DIRS+=("$line")
 done < $TMP_FILE 
 
 for log in ${ROM_DIRS[@]}; do
-    if [ -z "$(ls -A $ROMS2/$log)" ]; then #Skips directory if it's empty.
+    if [ -z "$(ls -A $ROOT_DIR/$log)" ]; then #Skips directory if it's empty.
         continue
     fi
     CHECKED_ROM_DIRS+=("$log") #This array only stores the names of the directories that aren't empty. 
@@ -56,8 +56,8 @@ unset ROM_DIRS
 
 CreateBackupDirs () {
 for fol in ${CHECKED_ROM_DIRS[@]}; do
-    if [ ! -d "/roms2/$BACKUP_DIR/$fol" ]; then
-        sudo mkdir -v /roms2/"$BACKUP_DIR"/"$fol"; printf "\n"
+    if [ ! -d "$ROOT_DIR/$BACKUP_DIR/$fol" ]; then
+        sudo mkdir -v "$ROOT_DIR/$BACKUP_DIR/$fol"; printf "\n"
     fi
 done    
 }
@@ -66,11 +66,11 @@ BackUpSaves () {
 printf "\e[0mBacking up save files...\n"
 for dir in ${CHECKED_ROM_DIRS[@]}; do
     if [ $dir == "dreamcast/" ]; then
-        sudo find /roms2/"$dir" -name "*.bin" -exec cp {} /roms2/"$BACKUP_DIR"/"$dir" \;
+        sudo find "$ROOT_DIR/$dir" -name "*.bin" -exec cp {} "$ROOT_DIR/$BACKUP_DIR/$dir" \;
     fi
     for svfile in ${SAVE_TYPES[@]}; do 
         printf "Finding $svfile files in $dir and copying them to $BACKUP_DIR/$dir...\n"
-        sudo find /roms2/"$dir" -name "*.$svfile" -exec cp {} /roms2/"$BACKUP_DIR"/"$dir" \;
+        sudo find "$ROOT_DIR/$dir" -name "*.$svfile" -exec cp {} "$ROOT_DIR/$BACKUP_DIR/$dir" \;
     done
 done
 
@@ -84,9 +84,9 @@ printf "\033c" > /dev/tty1
 }
 
 StartBackupFunction () {
-if [ ! -d "/roms2/$BACKUP_DIR" ]; then
+if [ ! -d "$ROOT_DIR/$BACKUP_DIR" ]; then
     printf "\n"
-    sudo mkdir -v /roms2/"$BACKUP_DIR"
+    sudo mkdir -v "$ROOT_DIR/$BACKUP_DIR"
     FindGameDirs
     PruneGameDirs
     CreateBackupDirs
