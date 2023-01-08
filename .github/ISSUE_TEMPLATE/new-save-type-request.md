@@ -15,3 +15,5 @@ EG. Bin
 
 **What is the default folder that the system's ROMs are located?**
 EG. /dreamcast
+
+**Any other information you want to provide?**
