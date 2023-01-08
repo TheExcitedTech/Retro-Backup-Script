@@ -19,7 +19,7 @@ This is useful if you are running the script through an SSH tunnel or using a ke
 
 Changing the paths are useful if you plan on using the script on another device or only have 1 SD card.
 
-**Please make sure to offload the backupsavs folder to another place, such as a cloud storage location.**
+**Please make sure to offload the `$BACKUP_DIR` folder to another place, such as a cloud storage location.**
 -------
 
 Dev Branch is to mess with the script to add experimental features. Will merge into main branch when changes have been tested and functionally verified. We should never code directly in PROD
