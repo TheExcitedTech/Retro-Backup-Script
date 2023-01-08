@@ -16,12 +16,12 @@ CONTROLS="/opt/wifi/oga_controls"
 sudo $CONTROLS Backup\ Saves.sh rg552 & sleep 2 #Joystick controls
 
 #########################
-SAVE_TYPES=("srm" "state*" "sav" "mcd" "eep" "mpk" "st0")
+SAVE_TYPES=("eep" "mcd" "mpk" "sav" "srm" "st0" "state*")
 BACKUP_DIR=${1:-"backupsavs"} #BACKUP FOLDER
 ROM_DIRS=()
 CHECKED_ROM_DIRS=()
 #Directories that will be skipped regardless if they have files in it.
-SKIPPED_DIRS=("$BACKUP_DIR" "backup" "opt" "themes" "etc" "bezels" "bios" "BGM" "bgmusic" "launchimages" "screenshots" "tools" "videos")  
+SKIPPED_DIRS=("$BACKUP_DIR" "backup" "bezels" "BGM" "bgmusic" "bios" "etc" "launchimages" "opt" "screenshots" "themes" "tools" "videos")  
 TMP_FILE="/tmp/romdirectories.txt"
 ROOT_DIR=${2:-"/roms2"} #ROOT Directory
 #########################
