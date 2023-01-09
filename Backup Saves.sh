@@ -30,7 +30,7 @@ FindGameDirs () {
 printf "Finding ROM directories...\n"
 ls -d1 $ROOT_DIR/*/ > "$TMP_FILE" #Only shows parent rom directories.
 while read -r line; do
-    line=$(cut -c 8- <<< "$line") #Removes the '/roms2/' from the array items.
+    line=$(cut -d '/' -f 2- <<< "$line") | ("${line/#//}")
     ROM_DIRS+=("$line")
 done < $TMP_FILE 
 
