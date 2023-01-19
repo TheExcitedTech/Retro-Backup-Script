@@ -30,21 +30,18 @@ FindGameDirs () {
 printf "Finding ROM directories...\n"
 ls -d1 $ROOT_DIR/*/ > "$TMP_FILE" #Only shows parent rom directories.
 while read -r line; do
-    # line=$(cut -d '/' -f 2- <<< "$line") | ("${line/#//}")
     line=$(cut -c 8- <<< "$line") #Removes the '/roms2/' from the array items.
     ROM_DIRS+=("$line")
 done < $TMP_FILE 
 }
 
-PruneGameDirs () { #This function removes any folders that are meant to be skipped.
-# for log in ${ROM_DIRS[@]}; do
-#     if [ -z "$(ls -A $ROOT_DIR/$log)" ]; then #Skips directory if it's empty.
-#         continue
-#     fi
-#     CHECKED_ROM_DIRS+=("$log") #This array only stores the names of the directories that aren't empty. 
-# done
-
+PruneGameDirs () {
+printf "Finding System directories with save files..."
 for dir in ${ROM_DIRS[@]}; do #Checks if the directories actually have save files. 
+    if [ $dir == "dreamcast/" ] && ls "$ROOT_DIR/$dir" | grep -q ".*\.bin$" ; then
+        CHECKED_ROM_DIRS+=("$dir")
+        continue
+    fi
     for svfile in ${SAVE_TYPES[@]}; do 
         if ls "$ROOT_DIR/$dir" | grep -q ".*\.$svfile$"; then
             CHECKED_ROM_DIRS+=("$dir")
