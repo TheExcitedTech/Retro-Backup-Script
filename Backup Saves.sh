@@ -30,7 +30,8 @@ FindGameDirs () {
 printf "Finding ROM directories...\n"
 ls -d1 $ROOT_DIR/*/ > "$TMP_FILE" #Only shows parent rom directories.
 while read -r line; do
-    line=$(cut -d '/' -f 2- <<< "$line") | ("${line/#//}")
+    # line=$(cut -d '/' -f 2- <<< "$line") | ("${line/#//}")
+    line=$(cut -c 8- <<< "$line") #Removes the '/roms2/' from the array items.
     ROM_DIRS+=("$line")
 done < $TMP_FILE 
 }
@@ -43,21 +44,13 @@ PruneGameDirs () { #This function removes any folders that are meant to be skipp
 #     CHECKED_ROM_DIRS+=("$log") #This array only stores the names of the directories that aren't empty. 
 # done
 
-COUNTER=0
 for dir in ${ROM_DIRS[@]}; do #Checks if the directories actually have save files. 
     for svfile in ${SAVE_TYPES[@]}; do 
-         files=$(ls $ROOT_DIR/$dir/*.$svfile 2> /dev/null | wc -l)
-         if [ "$files" -eq "0"]; then
-            continue
-        else 
-            ((COUNTER++))
+        if ls "$ROOT_DIR/$dir" | grep -q ".*\.$svfile$"; then
+            CHECKED_ROM_DIRS+=("$dir")
+            break
         fi
     done
-    if [ "$COUNTER" -eq "0" ]; then
-        continue
-    else 
-        COUNTER=0
-        CHECKED_ROM_DIRS+=("$dir")
 done
 
 for skipped in ${SKIPPED_DIRS[@]}; do
@@ -121,7 +114,7 @@ if [ $? = 0 ]; then
     BackUpSaves
 elif [ $? = 1 ]; then
     printf "No action taken. Exiting Script..."
-    sleep 2
+    sleep 1
     KillControls 
     exit 1
 fi
