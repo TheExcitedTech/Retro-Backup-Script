@@ -33,16 +33,33 @@ while read -r line; do
     line=$(cut -d '/' -f 2- <<< "$line") | ("${line/#//}")
     ROM_DIRS+=("$line")
 done < $TMP_FILE 
-
-for log in ${ROM_DIRS[@]}; do
-    if [ -z "$(ls -A $ROOT_DIR/$log)" ]; then #Skips directory if it's empty.
-        continue
-    fi
-    CHECKED_ROM_DIRS+=("$log") #This array only stores the names of the directories that aren't empty. 
-done
 }
 
 PruneGameDirs () { #This function removes any folders that are meant to be skipped.
+# for log in ${ROM_DIRS[@]}; do
+#     if [ -z "$(ls -A $ROOT_DIR/$log)" ]; then #Skips directory if it's empty.
+#         continue
+#     fi
+#     CHECKED_ROM_DIRS+=("$log") #This array only stores the names of the directories that aren't empty. 
+# done
+
+COUNTER=0
+for dir in ${ROM_DIRS[@]}; do #Checks if the directories actually have save files. 
+    for svfile in ${SAVE_TYPES[@]}; do 
+         files=$(ls $ROOT_DIR/$dir/*.$svfile 2> /dev/null | wc -l)
+         if [ "$files" -eq "0"]; then
+            continue
+        else 
+            ((COUNTER++))
+        fi
+    done
+    if [ "$COUNTER" -eq "0" ]; then
+        continue
+    else 
+        COUNTER=0
+        CHECKED_ROM_DIRS+=("$dir")
+done
+
 for skipped in ${SKIPPED_DIRS[@]}; do
     for fol in ${CHECKED_ROM_DIRS[@]}; do
         if [ "$fol" == "$skipped/" ]; then
