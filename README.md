@@ -1,7 +1,7 @@
 # Retro Saves Backup Script
 ## Bash script that will find save and state files and copy them up to a backups directory.
 
-Designed around the 353V Device with ArkOS however this should work with other linux based handhelds.
+Designed around the 353V Device with ArkOS.
 It uses OGA_Controls to allow it to be ran on a few devices. Might need to change the controls line if running on different hardware. 
 
 Reference https://github.com/christianhaitian/oga_controls
