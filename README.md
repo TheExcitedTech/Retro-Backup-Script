@@ -2,7 +2,7 @@
 ## Bash script that will find save and state files and copy them up to a backups directory.
 
 Designed around the 353V Device with ArkOS.
-It uses OGA_Controls to allow it to be ran on a few devices. Might need to change the controls line if running on different hardware. 
+It uses OGA_Controls to let you use the console controls. You'd probably need to change the controls line if running on different hardware. 
 
 Reference https://github.com/christianhaitian/oga_controls
 
