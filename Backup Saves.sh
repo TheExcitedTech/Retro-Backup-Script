@@ -28,15 +28,16 @@ ROOT_DIR=${2:-"/roms2"} #ROOT Directory
 
 FindGameDirs () {
 printf "Finding ROM directories...\n"
-ls -d1 $ROOT_DIR/*/ > "$TMP_FILE" #Only shows parent rom directories.
+ls -d1 $ROOT_DIR/*/ > "$TMP_FILE" #Only shows parent directories.
 while read -r line; do
     line=$(cut -c 8- <<< "$line") #Removes the '/roms2/' from the array items.
     ROM_DIRS+=("$line")
-done < $TMP_FILE 
+done < $TMP_FILE
+rm "$TMP_FILE" 
 }
 
 PruneGameDirs () {
-printf "Finding System directories with save files..."
+printf "Finding System directories with save files...\n"
 for dir in ${ROM_DIRS[@]}; do #Checks if the directories actually have save files. 
     if [ $dir == "dreamcast/" ] && ls "$ROOT_DIR/$dir" | grep -q ".*\.bin$" ; then
         CHECKED_ROM_DIRS+=("$dir")
