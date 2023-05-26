@@ -16,7 +16,7 @@ CONTROLS="/opt/wifi/oga_controls"
 sudo $CONTROLS Backup\ Saves.sh rg552 & sleep 2 #Joystick controls
 
 #########################
-SAVE_TYPES=("eep" "mcd" "mpk" "sav" "srm" "st0" "state*")
+SAVE_TYPES=("eep" "fs" "hi" "mcd" "mpk" "nv" "sav" "srm" "st0" "state*")
 BACKUP_DIR=${1:-"backupsavs"} #BACKUP FOLDER
 ROM_DIRS=()
 CHECKED_ROM_DIRS=()
