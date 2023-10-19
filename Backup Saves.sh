@@ -16,7 +16,7 @@ CONTROLS="/opt/wifi/oga_controls"
 sudo $CONTROLS Backup\ Saves.sh rg552 & sleep 2 #Joystick controls
 
 #########################
-SAVE_TYPES=("eep" "mcd" "mpk" "sav" "srm" "st0" "state*")
+SAVE_TYPES=("eep" "fs" "hi" "mcd" "mpk" "nv" "sav" "srm" "st0" "state*")
 BACKUP_DIR=${1:-"backupsavs"} #BACKUP FOLDER
 ROM_DIRS=()
 CHECKED_ROM_DIRS=()
@@ -27,7 +27,6 @@ ROOT_DIR=${2:-"/roms2"} #ROOT Directory
 #########################
 
 FindGameDirs () {
-printf "Finding ROM directories...\n"
 ls -d1 $ROOT_DIR/*/ > "$TMP_FILE" #Only shows parent directories.
 while read -r line; do
     line=$(cut -c 8- <<< "$line") #Removes the '/roms2/' from the array items.
@@ -37,7 +36,7 @@ rm "$TMP_FILE"
 }
 
 PruneGameDirs () {
-printf "Finding System directories with save files...\n"
+printf "Finding ROM directories with save files...\n"
 for dir in ${ROM_DIRS[@]}; do #Checks if the directories actually have save files. 
     if [ $dir == "dreamcast/" ] && ls "$ROOT_DIR/$dir" | grep -q ".*\.bin$" ; then
         CHECKED_ROM_DIRS+=("$dir")
@@ -72,11 +71,11 @@ done
 BackUpSaves () {
 printf "\e[0mBacking up save files...\n"
 for dir in ${CHECKED_ROM_DIRS[@]}; do
+    printf "Finding save files in $dir and copying them to $BACKUP_DIR/$dir...\n"
     if [ $dir == "dreamcast/" ]; then
         sudo find "$ROOT_DIR/$dir" -name "*.bin" -exec cp {} "$ROOT_DIR/$BACKUP_DIR/$dir" \;
     fi
     for svfile in ${SAVE_TYPES[@]}; do 
-        printf "Finding $svfile files in $dir and copying them to $BACKUP_DIR/$dir...\n"
         sudo find "$ROOT_DIR/$dir" -name "*.$svfile" -exec cp {} "$ROOT_DIR/$BACKUP_DIR/$dir" \;
     done
 done
